@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.controllers.MessageController" spacing="10.0">
+
+    <HBox spacing="10.0">
+        <VBox spacing="10.0" prefWidth="300.0">
+            <Label text="My Matchings" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <ListView fx:id="matchingListView" prefHeight="500.0"/>
+            <Button text="Add New Matching" onAction="#handleAddNewMatching" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        </VBox>
+
+        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+            <Label fx:id="matchingTitleLabel" text="Select a matching" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <ListView fx:id="messageListView" prefHeight="400.0" HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <TextArea fx:id="messageTextArea" promptText="Type your message here..." HBox.hgrow="ALWAYS"
+                          prefRowCount="3" wrapText="true"/>
+                <Button fx:id="sendButton" text="Send" onAction="#handleSendMessage"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
+</VBox>

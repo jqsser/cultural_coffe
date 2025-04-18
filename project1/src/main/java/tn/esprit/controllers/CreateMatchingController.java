@@ -1,7 +1,6 @@
 package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -10,19 +9,26 @@ import tn.esprit.entities.User;
 import tn.esprit.services.MatchingService;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class CreateMatchingController {
+
     @FXML private TextField nameField;
     @FXML private TextField subjectField;
     @FXML private TextField tableNumberField;
     @FXML private TextField participantCountField;
     @FXML private TextField imagePathField;
+    @FXML private Label errorLabel;
+    @FXML private DialogPane dialogPane;
 
-    private User currentUser;
-    private MatchingService matchingService = new MatchingService();
     private Stage dialogStage;
     private boolean createClicked = false;
-    private Object chatController;
+    private MatchingService matchingService = new MatchingService();
+    private static final String IMAGE_UPLOAD_DIRECTORY = "C:\\xampp\\htdocs\\imageC";
+    private User currentUser;
+    private ChatController chatController;
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
@@ -35,103 +41,115 @@ public class CreateMatchingController {
     public boolean isCreateClicked() {
         return createClicked;
     }
-    public void setChatController(ChatController chatController) {
-        this.chatController = chatController;
-    }
 
     @FXML
-    private void browseImage() {  // Method name matches FXML
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Matching Image");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        File selectedFile = fileChooser.showOpenDialog(dialogStage);
-        if (selectedFile != null) {
-            imagePathField.setText(selectedFile.getAbsolutePath());
+    private void initialize() {
+        // Ensure dialogPane is not null before using it
+        if (dialogPane != null) {
+            Button createButton = (Button) dialogPane.lookupButton(ButtonType.APPLY);
+            if (createButton != null) {
+                createButton.setOnAction(event -> handleCreate());
+            }
+        } else {
+            System.err.println("DialogPane is not properly initialized.");
         }
     }
 
     @FXML
-    public void handleCreate() {
-        if (validateInput()) {
-            Matching matching = createMatchingFromInput();
+    private void browseImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Matching Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+
+        File selectedFile = fileChooser.showOpenDialog(dialogStage);
+        if (selectedFile != null) {
             try {
-                matchingService.ajouter(matching);
-                createClicked = true;
-                // The dialog will be closed by the Dialog's button handling
-            } catch (Exception e) {
-                showAlert("Database Error", "Failed to save matching: " + e.getMessage());
+                File uploadDir = new File(IMAGE_UPLOAD_DIRECTORY);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+
+                String uniqueFileName = System.currentTimeMillis() + "_" + selectedFile.getName();
+                File destinationFile = new File(uploadDir, uniqueFileName);
+
+                Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                imagePathField.setText("imageC/" + uniqueFileName);
+            } catch (IOException e) {
+                errorLabel.setText("Failed to upload image: " + e.getMessage());
             }
         }
     }
 
-    @FXML
-    private void handleCancel() {
-        dialogStage.close();
+    void handleCreate() {
+        if (validateInput()) {
+            try {
+                Matching matching = new Matching(
+                        nameField.getText().trim(),
+                        subjectField.getText().trim(),
+                        Integer.parseInt(tableNumberField.getText().trim()),
+                        Integer.parseInt(participantCountField.getText().trim()),
+                        imagePathField.getText().trim()
+                );
+
+                if (currentUser != null) {
+                    matching.setUser(currentUser);
+                } else {
+                    errorLabel.setText("Current user is not set. Please log in again.");
+                    return;
+                }
+
+                matchingService.ajouter(matching);
+                createClicked = true;
+                dialogStage.close();
+            } catch (Exception e) {
+                errorLabel.setText("Failed to save matching: " + e.getMessage());
+            }
+        }
     }
 
     private boolean validateInput() {
         StringBuilder errorMessage = new StringBuilder();
 
-        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) {
+        if (nameField.getText().trim().isEmpty()) {
             errorMessage.append("Name is required!\n");
+        } else if (nameField.getText().trim().length() < 3 || nameField.getText().trim().length() > 20) {
+            errorMessage.append("Name must be between 3 and 20 characters!\n");
         }
 
-        if (subjectField.getText() == null || subjectField.getText().trim().isEmpty()) {
+        if (subjectField.getText().trim().isEmpty()) {
             errorMessage.append("Subject is required!\n");
+        } else if (subjectField.getText().trim().length() < 3 || subjectField.getText().trim().length() > 20) {
+            errorMessage.append("Subject must be between 3 and 20 characters!\n");
         }
 
-        if (tableNumberField.getText() == null || tableNumberField.getText().trim().isEmpty()) {
-            errorMessage.append("Table number is required!\n");
-        } else {
-            try {
-                Integer.parseInt(tableNumberField.getText().trim());
-            } catch (NumberFormatException e) {
-                errorMessage.append("Table number must be a valid integer!\n");
+        try {
+            int tableNumber = Integer.parseInt(tableNumberField.getText().trim());
+            if (tableNumber < 1 || tableNumber > 40) {
+                errorMessage.append("Table number must be between 1 and 40!\n");
             }
+        } catch (NumberFormatException e) {
+            errorMessage.append("Table number must be a valid integer!\n");
         }
 
-        if (participantCountField.getText() == null || participantCountField.getText().trim().isEmpty()) {
-            errorMessage.append("Participant count is required!\n");
-        } else {
-            try {
-                Integer.parseInt(participantCountField.getText().trim());
-            } catch (NumberFormatException e) {
-                errorMessage.append("Participant count must be a valid integer!\n");
+        try {
+            int participantCount = Integer.parseInt(participantCountField.getText().trim());
+            if (participantCount < 2 || participantCount > 10) {
+                errorMessage.append("Participant count must be between 2 and 10!\n");
             }
+        } catch (NumberFormatException e) {
+            errorMessage.append("Participant count must be a valid integer!\n");
         }
 
         if (errorMessage.length() == 0) {
+            errorLabel.setText("");
             return true;
         } else {
-            showAlert("Invalid Fields", errorMessage.toString());
+            errorLabel.setText(errorMessage.toString());
             return false;
         }
     }
 
-    private Matching createMatchingFromInput() {
-        Matching matching = new Matching(
-                nameField.getText().trim(),
-                subjectField.getText().trim(),
-                Integer.parseInt(tableNumberField.getText().trim()),
-                Integer.parseInt(participantCountField.getText().trim()),
-                imagePathField.getText().trim()
-        );
-        matching.setUser(currentUser);
-        return matching;
+    public void setChatController(ChatController chatController) {
+        this.chatController = chatController;
     }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.initOwner(dialogStage);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
-
 }

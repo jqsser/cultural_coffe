@@ -38,12 +38,13 @@
         <VBox spacing="10">
             <!-- Chat Header -->
             <HBox styleClass="chat-header" alignment="CENTER_LEFT">
-                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                <ImageView fx:id="matchingImageView" fitHeight="40" fitWidth="40" preserveRatio="true">
                     <image>
                         <Image url="@/images/avatar.png"/>
                     </image>
                 </ImageView>
                 <VBox style="-fx-padding: 0 0 0 10;">
+                    <Label fx:id="matchingIdLabel" style="-fx-text-fill: #6c757d; -fx-font-size: 12;"/>
                     <Label fx:id="matchingNameLabel" style="-fx-font-weight: bold;"/>
                     <Label fx:id="matchingSubjectLabel" style="-fx-text-fill: #6c757d; -fx-font-size: 12;"/>
                 </VBox>

@@ -39,7 +39,7 @@ public class MessageController {
             // For testing, create a user with ID 38
             currentUser = new User();
             currentUser.setId(38);
-            currentUser.setNomUser("Test User");
+            currentUser.setName("Test User");
 
             loadMatchings();
             setupSelectionListeners();
@@ -94,7 +94,7 @@ public class MessageController {
                     } else {
                         // Create a custom display for each message
                         VBox messageBox = new VBox();
-                        Label userLabel = new Label(message.getUser().getNomUser() + ":");
+                        Label userLabel = new Label(message.getUser().getName() + ":");
                         Label contentLabel = new Label(message.getContent());
                         Label timeLabel = new Label(message.getCreatedAt().toString());
 

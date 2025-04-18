@@ -1,5 +1,7 @@
 package tn.esprit.services;
 
+import org.mindrot.jbcrypt.BCrypt;
+import tn.esprit.entities.Matching;
 import tn.esprit.entities.User;
 import tn.esprit.tools.MyDataBase;
 
@@ -7,31 +9,215 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService implements IService<User> {
-    private Connection cnx;
-    private String sql;
-
-    public UserService() {
-        cnx = MyDataBase.getInstance().getCnx();
+public class UserService implements IService<User>{
+    Connection cnx;
+    String sql;
+    public UserService(){
+        cnx= MyDataBase.getInstance().getCnx();
     }
 
     @Override
     public void ajouter(User user) throws SQLException {
-        sql = "INSERT INTO user (password, role_user, nom_user, prenom_user, email_user, " +
-                "adresse, telephone_user, photo_user, date_naissance_user) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql="insert into user(name,lastname,roles,password,email,photo,date_Creation,is_Banned,is_Verified)" +
+                "values(?,?,?,?,?,?,?,?,?)";
+        PreparedStatement ste = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // ✅
 
-        try (PreparedStatement ste = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            setUserParameters(ste, user);
-            ste.executeUpdate();
 
-            try (ResultSet generatedKeys = ste.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    user.setId(generatedKeys.getInt(1));
-                }
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+
+        ste.setString(1,user.getName());
+        ste.setString(2,user.getLastname());
+        ste.setString(3,user.getRoles());
+        ste.setString(4, hashedPassword);
+        ste.setString(5,user.getEmail());
+        ste.setString(6,user.getPhoto());
+
+
+        int rowsInserted = ste.executeUpdate();
+
+        if (rowsInserted > 0) {
+            ResultSet generatedKeys = ste.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
+                user.setId(id); // 🔥 this modifies the object passed from outside
+                System.out.println("User added with ID: " + id);
             }
+        } else {
+            System.out.println("User was not inserted.");
         }
     }
+
+    @Override
+    public void modifier(User user) throws SQLException{
+        System.out.println("Updating user with ID: " + user.getId());
+
+        sql = "UPDATE user SET name = ?, lastname = ?, email = ?, photo = ? WHERE id = ?";
+        PreparedStatement ste = cnx.prepareStatement(sql);
+
+        ste.setString(1, user.getName());
+        ste.setString(2, user.getLastname());
+        ste.setString(3, user.getEmail());
+        ste.setString(4, user.getPhoto());
+       // ste.setDate(5, new java.sql.Date(user.getDateCreation().getTime()));
+        ste.setInt(5, user.getId());
+
+        int rowsUpdated = ste.executeUpdate();
+        if (rowsUpdated > 0) {
+            System.out.println("User information updated successfully!");
+        } else {
+            System.out.println("No rows updated, user might not exist.");
+        }
+    }
+
+    public void update(User user) throws SQLException{
+        String sql = "UPDATE user SET name = ?, lastname = ?, email = ?, photo = ?, roles = ?, is_Banned = ? WHERE id = ?";
+
+        try {
+            PreparedStatement ste = cnx.prepareStatement(sql);
+
+            ste.setString(1, user.getName());
+            ste.setString(2, user.getLastname());
+            ste.setString(3, user.getEmail());
+            ste.setString(4, user.getPhoto());
+            ste.setString(5, user.getRoles());
+
+            ste.setInt(7, user.getId());
+
+            int rowsUpdated = ste.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("✅ User updated successfully!");
+            } else {
+                System.out.println("❌ Update failed: User not found.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error while updating user: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+//  @Override
+//    public void modifier(int id, String nom) throws SQLException {
+//        sql= " update user set name='"+nom+"' where id="+id;
+//        Statement st = cnx.createStatement();
+//        st.executeUpdate(sql);
+//        System.out.println("personne modifiée");
+//    }
+
+
+
+
+    @Override
+    public void supprimer(User user) {
+        // SQL statement to delete the user by ID
+        String sql = "DELETE FROM user WHERE id = ?";
+
+        try (PreparedStatement ste = cnx.prepareStatement(sql)) {
+            // Set the user ID to the SQL statement
+            ste.setInt(1, user.getId());
+
+            // Execute the update to delete the user
+            int rowsAffected = ste.executeUpdate();
+
+            // Check if a row was deleted (should be 1 if successful)
+            if (rowsAffected > 0) {
+                System.out.println("User deleted successfully!");
+            } else {
+                System.out.println("User not found, deletion failed.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error deleting user: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public List<User> recuperer() throws SQLException {
+        sql = "SELECT * FROM user";
+        Statement st = cnx.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        List<User> users = new ArrayList<>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String lastname = rs.getString("lastname");
+
+            String email = rs.getString("email");
+            Boolean verification = rs.getBoolean("is_Verified");
+
+            Date dateCreation = rs.getDate("date_Creation");
+
+            User user = new User(id,name, lastname, email, dateCreation,verification);
+            //   user.setId(id); // Set ID separately if not handled by constructor
+            users.add(user);
+        }
+
+        return users;
+    }
+
+
+
+
+    public List<User> recupererr() throws SQLException {
+        sql = "SELECT * FROM user";
+        Statement st = cnx.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        List<User> users = new ArrayList<>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String lastname = rs.getString("lastname");
+            String roles = rs.getString("roles");
+            String password = rs.getString("password");
+            String email = rs.getString("email");
+            String photo = rs.getString("photo");
+            Date dateCreation = rs.getDate("date_Creation");
+            Boolean status = rs.getBoolean("is_Banned");
+            Boolean verification = rs.getBoolean("is_Verified");
+
+
+            User user = new User(id,name, lastname,roles,password, email, photo, dateCreation,status,verification);
+         //   user.setId(id); // Set ID separately if not handled by constructor
+            users.add(user);
+        }
+
+        return users;
+    }
+
+
+
+    public User login(String email, String password) throws SQLException {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        PreparedStatement pst = cnx.prepareStatement(sql);
+        pst.setString(1, email);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            String hashedPassword = rs.getString("password");
+
+            if (BCrypt.checkpw(password, hashedPassword)) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String lastname = rs.getString("lastname");
+                String roles = rs.getString("roles");
+                String photo = rs.getString("photo");
+                Date dateCreation = rs.getDate("date_Creation");
+                boolean isBanned = rs.getBoolean("is_Banned");
+                boolean isVerified = rs.getBoolean("is_Verified");
+
+                User user = new User(id,name, lastname, roles, password, email, photo, dateCreation, isBanned, isVerified);
+               // user.setId(id);
+                return user;
+            }
+        }
+
+        return null; // login failed
+    }
+
+
     public User getByUsername(String username) throws SQLException {
         sql = "SELECT * FROM user WHERE username=?";
 
@@ -42,7 +228,7 @@ public class UserService implements IService<User> {
                 if (rs.next()) {
                     User user = new User();
                     user.setId(rs.getInt("id"));
-                    user.setNomUser(rs.getString("username"));
+                    user.setName(rs.getString("username"));
                     // set other fields as needed
                     return user;
                 }
@@ -50,52 +236,17 @@ public class UserService implements IService<User> {
         }
         return null;
     }
+    private User resultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setPassword(rs.getString("password"));
+        user.setRoles(rs.getString("role_user"));
+        user.setName(rs.getString("nom_user"));
+        user.setPassword(rs.getString("email_user"));
+        user.setPhoto(rs.getString("photo_user"));
 
-    @Override
-    public void modifier(User user) throws SQLException {
-        sql = "UPDATE user SET password=?, role_user=?, nom_user=?, prenom_user=?, " +
-                "email_user=?, adresse=?, telephone_user=?, photo_user=?, date_naissance_user=? " +
-                "WHERE id=?";
-
-        try (PreparedStatement ste = cnx.prepareStatement(sql)) {
-            setUserParameters(ste, user);
-            ste.setInt(10, user.getId());
-            ste.executeUpdate();
-        }
+        return user;
     }
-
-    @Override
-    public void supprimer(int id) throws SQLException {
-        // First delete from matching_user join table
-        sql = "DELETE FROM matching_user WHERE user_id=?";
-        try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        }
-
-        // Then delete the user
-        sql = "DELETE FROM user WHERE id=?";
-        try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        }
-    }
-
-    @Override
-    public List<User> recuperer() throws SQLException {
-        List<User> users = new ArrayList<>();
-        sql = "SELECT * FROM user";
-
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while(rs.next()) {
-                users.add(resultSetToUser(rs));
-            }
-        }
-        return users;
-    }
-
-    @Override
     public User getById(int id) throws SQLException {
         sql = "SELECT * FROM user WHERE id=?";
 
@@ -111,36 +262,4 @@ public class UserService implements IService<User> {
         return null;
     }
 
-    // Helper methods
-    private void setUserParameters(PreparedStatement ste, User user) throws SQLException {
-        ste.setString(1, user.getPassword());
-        ste.setString(2, user.getRoleUser());
-        ste.setString(3, user.getNomUser());
-        ste.setString(4, user.getPrenomUser());
-        ste.setString(5, user.getEmailUser());
-        ste.setString(6, user.getAdresse());
-        ste.setInt(7, user.getTelephoneUser());
-        ste.setString(8, user.getPhotoUser());
-        ste.setDate(9, Date.valueOf(user.getDateNaissanceUser()));
-    }
-
-    private User resultSetToUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("id"));
-        user.setPassword(rs.getString("password"));
-        user.setRoleUser(rs.getString("role_user"));
-        user.setNomUser(rs.getString("nom_user"));
-        user.setPrenomUser(rs.getString("prenom_user"));
-        user.setEmailUser(rs.getString("email_user"));
-        user.setAdresse(rs.getString("adresse"));
-        user.setTelephoneUser(rs.getInt("telephone_user"));
-        user.setPhotoUser(rs.getString("photo_user"));
-
-        Date date = rs.getDate("date_naissance_user");
-        if (date != null) {
-            user.setDateNaissanceUser(date.toLocalDate());
-        }
-
-        return user;
-    }
 }

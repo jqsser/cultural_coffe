@@ -7,7 +7,6 @@ import tn.esprit.entities.User;
 import tn.esprit.tools.MyDataBase;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,10 +49,21 @@ public class MessageService implements IService<Message> {
         }
     }
 
-    public void supprimer(int id) throws SQLException {
+    @Override
+    public void supprimer(Message message) throws SQLException {
+
         String req = "DELETE FROM message WHERE id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
-            ps.setInt(1, id);
+            ps.setInt(1, message.getId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void supprimer(int id) throws SQLException {
+
+        String req = "DELETE FROM message WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setInt(1,id);
             ps.executeUpdate();
         }
     }
@@ -88,20 +98,39 @@ public class MessageService implements IService<Message> {
         return messages;
     }
 
-    @Override
-    public Message getById(int id) throws SQLException {
-        sql = "SELECT * FROM message WHERE id=?";
+    public List<Matching> getByUserId(int userId) throws SQLException {
+        List<Matching> matchings = new ArrayList<>();
+        sql = "SELECT * FROM matching WHERE user_id=?";
 
         try (PreparedStatement st = cnx.prepareStatement(sql)) {
-            st.setInt(1, id);
+            st.setInt(1, userId);
 
             try (ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    return resultSetToMessage(rs);
+                while (rs.next()) {
+                    matchings.add(resultSetToMatching(rs));
                 }
             }
         }
-        return null;
+        return matchings;
+    }
+
+
+    // Helper method to convert ResultSet to Matching object
+    private Matching resultSetToMatching(ResultSet rs) throws SQLException {
+        Matching matching = new Matching();
+        matching.setId(rs.getInt("id"));
+        matching.setName(rs.getString("name"));
+        matching.setSujetRencontre(rs.getString("sujet_rencontre"));
+        matching.setNumTable(rs.getInt("num_table"));
+        matching.setNbrPersonneMatchy(rs.getInt("nbr_personne_matchy"));
+        matching.setImage(rs.getString("image"));
+
+        // Get the user (host) of the matching
+        UserService userService = new UserService();
+        User user = userService.getById(rs.getInt("user_id"));
+        matching.setUser(user);
+
+        return matching;
     }
 
     private Message resultSetToMessage(ResultSet rs) throws SQLException {

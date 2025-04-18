@@ -1,45 +1,107 @@
 package tn.esprit.entities;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.Date;
 
 public class User {
     private int id;
+    private String name;
+    private String lastname;
+    private String roles;
     private String password;
-    private String roleUser;
-    private String nomUser;
-    private String prenomUser;
-    private String emailUser;
-    private String adresse;
-    private int telephoneUser;
-    private String photoUser;
-    private LocalDate dateNaissanceUser;
-    private List<Matching> matchings = new ArrayList<>(); // For the inverse side of matching relationship
-    private List<Matching> assessorMatchings = new ArrayList<>(); // For the many-to-many relationship
+    private String email;
+    private String photo;
+
+
+
 
     public User() {
     }
 
-    public User(String password, String roleUser, String nomUser, String prenomUser,
-                String emailUser, String adresse, int telephoneUser, LocalDate dateNaissanceUser) {
+
+    public User(int id,String name, String lastname, String roles, String password, String email, String photo, Date dateCreation, boolean isBanned, boolean isVerified) {
+
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.roles = roles;
         this.password = password;
-        this.roleUser = roleUser;
-        this.nomUser = nomUser;
-        this.prenomUser = prenomUser;
-        this.emailUser = emailUser;
-        this.adresse = adresse;
-        this.telephoneUser = telephoneUser;
-        this.dateNaissanceUser = dateNaissanceUser;
+        this.email = email;
+        this.photo = photo;
+
     }
 
-    // Getters and Setters
+    public User(String name, String lastname, String roles, String password, String email, String photo, Date dateCreation, boolean isBanned, boolean isVerified) {
+
+        this.name = name;
+        this.lastname = lastname;
+        this.roles = roles;
+        this.password = password;
+        this.email = email;
+        this.photo = photo;
+
+    }
+
+
+    public User(String name, String lastname,   String email, String photo, Date dateCreation, boolean isBanned, boolean isVerified) {
+
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.photo = photo;
+
+    }
+    public User(String name, String lastname,   String email, String Password) {
+
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+       this.password = Password;
+    }
+
+    public User(int Id, String name) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public User(int id,String name, String lastname, String email, Date dateCreation, Boolean verification) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     public String getPassword() {
@@ -50,94 +112,34 @@ public class User {
         this.password = password;
     }
 
-    public String getRoleUser() {
-        return roleUser;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRoleUser(String roleUser) {
-        this.roleUser = roleUser;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getNomUser() {
-        return nomUser;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setNomUser(String nomUser) {
-        this.nomUser = nomUser;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
-    public String getPrenomUser() {
-        return prenomUser;
-    }
 
-    public void setPrenomUser(String prenomUser) {
-        this.prenomUser = prenomUser;
-    }
-
-    public String getEmailUser() {
-        return emailUser;
-    }
-
-    public void setEmailUser(String emailUser) {
-        this.emailUser = emailUser;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public int getTelephoneUser() {
-        return telephoneUser;
-    }
-
-    public void setTelephoneUser(int telephoneUser) {
-        this.telephoneUser = telephoneUser;
-    }
-
-    public String getPhotoUser() {
-        return photoUser;
-    }
-
-    public void setPhotoUser(String photoUser) {
-        this.photoUser = photoUser;
-    }
-
-    public LocalDate getDateNaissanceUser() {
-        return dateNaissanceUser;
-    }
-
-    public void setDateNaissanceUser(LocalDate dateNaissanceUser) {
-        this.dateNaissanceUser = dateNaissanceUser;
-    }
-
-    public List<Matching> getMatchings() {
-        return matchings;
-    }
-
-    public void setMatchings(List<Matching> matchings) {
-        this.matchings = matchings;
-    }
-
-    public List<Matching> getAssessorMatchings() {
-        return assessorMatchings;
-    }
-
-    public void setAssessorMatchings(List<Matching> assessorMatchings) {
-        this.assessorMatchings = assessorMatchings;
-    }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", nomUser='" + nomUser + '\'' +
-                ", prenomUser='" + prenomUser + '\'' +
-                ", emailUser='" + emailUser + '\'' +
-                ", roleUser='" + roleUser + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", type='" + roles + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
                 '}';
     }
 

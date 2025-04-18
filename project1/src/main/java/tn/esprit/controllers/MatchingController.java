@@ -82,12 +82,12 @@ public class MatchingController {
         ObservableList<MenuItem> assessorItems = FXCollections.observableArrayList();
 
         for (User u : users) {
-            MenuItem userItem = new MenuItem(u.getNomUser());
-            userItem.setOnAction(e -> user.setText(u.getNomUser()));
+            MenuItem userItem = new MenuItem(u.getName());
+            userItem.setOnAction(e -> user.setText(u.getName()));
 
-            MenuItem assessorItem = new MenuItem(u.getNomUser());
+            MenuItem assessorItem = new MenuItem(u.getName());
             assessorItem.setOnAction(e -> assessors.setText(assessors.getText() +
-                    (assessors.getText().isEmpty() ? "" : ", ") + u.getNomUser()));
+                    (assessors.getText().isEmpty() ? "" : ", ") + u.getName()));
 
             userItems.add(userItem);
             assessorItems.add(assessorItem);
@@ -108,7 +108,7 @@ public class MatchingController {
             sujet.setText(matching.getSujetRencontre());
             numTable.setText(String.valueOf(matching.getNumTable()));
             nbrPersonneMatchy.setText(String.valueOf(matching.getNbrPersonneMatchy()));
-            user.setText(matching.getUser().getNomUser());
+            user.setText(matching.getUser().getName());
 
             // Load image if exists
             if (matching.getImage() != null && !matching.getImage().isEmpty()) {
@@ -215,6 +215,7 @@ public class MatchingController {
 
             if (confirm.showAndWait().get() == ButtonType.OK) {
                 matchingService.supprimer(selectedMatching.getId());
+
                 showAlert("Success", "Matching deleted successfully!");
                 refreshMatchingList();
                 clearFields();

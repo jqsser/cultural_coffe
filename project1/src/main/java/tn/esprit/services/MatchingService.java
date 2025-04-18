@@ -40,6 +40,8 @@ public class MatchingService implements IService<Matching> {
 
     @Override
     public void modifier(Matching matching) throws SQLException {
+        System.out.println("Updating matching in database: " + matching); // Debugging
+
         sql = "UPDATE matching SET name=?, sujet_rencontre=?, num_table=?, " +
                 "nbr_personne_matchy=?, image=?, user_id=? WHERE id=?";
 
@@ -52,22 +54,28 @@ public class MatchingService implements IService<Matching> {
             ste.setInt(6, matching.getUser().getId());
             ste.setInt(7, matching.getId());
             ste.executeUpdate();
+            System.out.println("Matching updated successfully in the database.");
+        } catch (Exception e) {
+            System.err.println("Error updating matching: " + e.getMessage());
+            throw e;
         }
+
     }
 
     @Override
-    public void supprimer(int id) throws SQLException {
+    public void supprimer(Matching matching) throws SQLException {
+
         // First delete from matching_user join table
         sql = "DELETE FROM matching_user WHERE matching_id=?";
         try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, matching.getId());
             stmt.executeUpdate();
         }
 
         // Then delete the matching
         sql = "DELETE FROM matching WHERE id=?";
         try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, matching.getId());
             stmt.executeUpdate();
         }
     }
@@ -86,7 +94,7 @@ public class MatchingService implements IService<Matching> {
         return matchings;
     }
 
-    @Override
+
     public Matching getById(int id) throws SQLException {
         sql = "SELECT * FROM matching WHERE id=?";
 
@@ -151,5 +159,21 @@ public class MatchingService implements IService<Matching> {
             }
         }
         return matchings;
+    }
+
+    public void supprimer(int id) throws SQLException {
+        // First delete from matching_user join table
+        sql = "DELETE FROM matching_user WHERE matching_id=?";
+        try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+
+        // Then delete the matching
+        sql = "DELETE FROM matching WHERE id=?";
+        try (PreparedStatement stmt = cnx.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

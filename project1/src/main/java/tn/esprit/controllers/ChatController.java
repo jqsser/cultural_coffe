@@ -19,6 +19,8 @@ import tn.esprit.services.MessageService;
 
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+
+import java.text.CollationElementIterator;
 import java.time.format.DateTimeFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.DialogPane;
@@ -32,6 +34,9 @@ public class ChatController {
     @FXML private TextArea messageTextArea;
     @FXML private Label matchingNameLabel;
     @FXML private Label matchingSubjectLabel;
+    @FXML private Label matchingIdLabel; // Added for displaying the Matching ID
+    @FXML private ImageView matchingImageView; // Added for displaying the Matching image
+
 
     private User currentUser;
     private MatchingService matchingService = new MatchingService();
@@ -43,7 +48,7 @@ public class ChatController {
         // Set test user with ID 38
         currentUser = new User();
         currentUser.setId(34);
-        currentUser.setNomUser("Test User");
+        currentUser.setName("Test User");
 
         // Configure list views
         setupMatchingListView();
@@ -63,7 +68,24 @@ public class ChatController {
                     setGraphic(null);
                 } else {
                     HBox hbox = new HBox(10);
-                    ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream("/images/avatar.png")));
+
+                    // Dynamically load the image from the database path or fallback to the default avatar
+                    Image image;
+                    try {
+                        String imagePath = matching.getImage(); // Get the image path from the database
+                        if (imagePath == null || imagePath.trim().isEmpty()) {
+                            // Use the default avatar if the image path is null or empty
+                            image = new Image(getClass().getResource("/images/avatar.png").toExternalForm());
+                        } else {
+                            // Load the image from the provided path (relative to the filesystem or URL)
+                            image = new Image("file:" + imagePath, true); // Lazy loading
+                        }
+                    } catch (Exception e) {
+                        // If loading fails, fallback to the default avatar
+                        image = new Image(getClass().getResource("/images/avatar.png").toExternalForm());
+                    }
+
+                    ImageView avatar = new ImageView(image);
                     avatar.setFitHeight(40);
                     avatar.setFitWidth(40);
 
@@ -112,7 +134,7 @@ public class ChatController {
                                     "-fx-padding: 8 12; -fx-max-width: 500;");
 
                     // Username label
-                    Label userLabel = new Label(message.getUser().getNomUser());
+                    Label userLabel = new Label(message.getUser().getName());
                     userLabel.setStyle(isCurrentUser ?
                             "-fx-font-weight: bold; -fx-text-fill: white;" :
                             "-fx-font-weight: bold; -fx-text-fill: #000000;");
@@ -256,9 +278,25 @@ public class ChatController {
         if (matching == null) return;
 
         selectedMatching = matching;
+
+        // Set the Matching ID, name, and subject in the chat header
+        matchingIdLabel.setText("ID: " + matching.getId());
         matchingNameLabel.setText(matching.getName());
         matchingSubjectLabel.setText(matching.getSujetRencontre());
 
+        // Load the image dynamically from the Matching object
+        try {
+            String imagePath = matching.getImage();
+            if (imagePath == null || imagePath.trim().isEmpty()) {
+                matchingImageView.setImage(new Image(getClass().getResource("/images/avatar.png").toExternalForm()));
+            } else {
+                matchingImageView.setImage(new Image("file:" + imagePath, true));
+            }
+        } catch (Exception e) {
+            matchingImageView.setImage(new Image(getClass().getResource("/images/avatar.png").toExternalForm()));
+        }
+
+        // Load messages for the selected matching
         try {
             List<Message> messages = messageService.getByMatching(matching.getId());
             messageListView.setItems(FXCollections.observableArrayList(messages));
@@ -326,43 +364,56 @@ public class ChatController {
         }
     }
 
-    @FXML
-    private void showCreateMatchingDialog() {
+    public void showCreateMatchingDialog(ActionEvent event) {
         try {
-            // Update the path to match your project structure
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/CreateMatching.fxml"));
+            // Load the FXML file for the Create Matching dialog
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CreateMatching.fxml"));
 
-            // For debugging - print the URL to verify the resource is found
-            System.out.println("FXML Location: " + getClass().getResource("/CreateMatching.fxml"));
+            // Debugging: Print the URL to verify the resource is found
+            if (getClass().getResource("/CreateMatching.fxml") == null) {
+                throw new IOException("CreateMatching.fxml file not found!");
+            }
 
             DialogPane dialogPane = loader.load();
 
-            // Create the dialog
+            // Create and configure the dialog
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Create New Matching");
 
-            // Get the controller and set necessary data
+            // Get the controller for CreateMatching
             CreateMatchingController controller = loader.getController();
+
+            // Set necessary data in the controller
             controller.setDialogStage((Stage) dialog.getDialogPane().getScene().getWindow());
-            controller.setCurrentUser(currentUser);
-            controller.setChatController(this);
+            controller.setCurrentUser(currentUser); // Pass the current user
+            controller.setChatController(this);    // Pass the ChatController for refreshing data
 
             // Show the dialog and process the result
             dialog.showAndWait().ifPresent(buttonType -> {
                 if (buttonType.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                    controller.handleCreate();
-                    if (controller.isCreateClicked()) {
-                        // Refresh the matching list
-                        loadUserMatchings();
+                    try {
+                        controller.handleCreate(); // Handle the creation logic
+                        if (controller.isCreateClicked()) {
+                            loadUserMatchings(); // Refresh the matching list
+                            System.out.println("Matching list refreshed after creation.");
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error during CreateMatching handling: " + e.getMessage());
+                        e.printStackTrace();
+                        showAlert("Error", "Failed to create matching: " + e.getMessage());
                     }
                 }
             });
 
         } catch (IOException e) {
-            e.printStackTrace(); // This will help debug the exact error
+            System.err.println("Error loading CreateMatching.fxml: " + e.getMessage());
+            e.printStackTrace();
             showAlert("Error", "Could not load the create matching dialog: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
     @FXML
@@ -373,7 +424,6 @@ public class ChatController {
 
     @FXML
     public void showEditMatchingDialog(ActionEvent actionEvent) {
-        // Get the selected matching
         Matching selectedMatching = matchingListView.getSelectionModel().getSelectedItem();
 
         if (selectedMatching == null) {
@@ -382,31 +432,30 @@ public class ChatController {
         }
 
         try {
-            // Load the EditMatching.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditMatching.fxml"));
             DialogPane dialogPane = loader.load();
 
-            // Get the controller for the edit dialog
             EditMatchingController controller = loader.getController();
-            controller.setCurrentMatching(selectedMatching);
-            controller.setChatController(this);
+            controller.setCurrentMatching(selectedMatching); // Pass the selected matching
 
-            // Create the dialog
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Edit Matching");
 
-            // Show the dialog and process the result
             dialog.showAndWait().ifPresent(result -> {
-                if (result.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                if (result.getButtonData() == ButtonBar.ButtonData.APPLY) {
+                    System.out.println("APPLY button clicked."); // Debugging
                     if (controller.processResult()) {
+                        System.out.println("Changes saved. Reloading matchings."); // Debugging
                         loadUserMatchings(); // Refresh the matching list
+                    } else {
+                        System.out.println("Failed to save changes."); // Debugging
                     }
                 }
             });
-
         } catch (IOException e) {
-            showAlertw("Error", "Could not load the edit matching dialog: " + e.getMessage());
+            showAlert("Error", "Could not load the edit matching dialog: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

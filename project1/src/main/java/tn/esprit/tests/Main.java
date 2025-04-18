@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        try {
+        /** try {
             // First test UserService since Matching depends on User
             testUserService();
 
@@ -190,6 +190,6 @@ public class Main {
             System.out.println("Message deleted. Current count: " + messageService.recuperer().size());
         } else {
             System.err.println("ERROR: Could not fetch message by ID");
-        }
+        }*/
     }
 }

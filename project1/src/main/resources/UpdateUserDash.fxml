@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.UpdateUserControllerDash">
+    <children>
+        <Label layoutX="20" layoutY="20" text="Name" />
+        <TextField fx:id="nameField" layoutX="100" layoutY="20" />
+
+        <Label layoutX="20" layoutY="60" text="Lastname" />
+        <TextField fx:id="lastnameField" layoutX="100" layoutY="60" />
+
+        <Label layoutX="20" layoutY="100" text="Email" />
+        <TextField fx:id="emailField" layoutX="100" layoutY="100" />
+
+        <Label layoutX="20" layoutY="140" text="Roles" />
+        <ComboBox fx:id="rolesComboBox" layoutX="100" layoutY="140" />
+
+        <Label layoutX="20" layoutY="220" text="Photo" />
+        <Button layoutX="100" layoutY="220" onAction="#handleChoosePhoto" text="Choose Photo" />
+
+        <Button layoutX="100" layoutY="270" onAction="#handleUpdateDash" text="Update" />
+    </children>
+</AnchorPane>

@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<DialogPane xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.esprit.controllers.CreateMatchingController" stylesheets="@styles.css">
-    <headerText>
-        <Label text="Create New Matching" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-    </headerText>
+<DialogPane fx:id="dialogPane" headerText="Create Matching" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.CreateMatchingController">
 
     <content>
-        <GridPane hgap="10" vgap="10" style="-fx-padding: 10;">
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
-                <ColumnConstraints hgrow="ALWAYS"/>
-            </columnConstraints>
+        <VBox spacing="10">
+            <GridPane hgap="10" vgap="10">
+                <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <rowConstraints>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-            </rowConstraints>
+                <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="subjectField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="nameField" promptText="Enter matching name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Table Number:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="tableNumberField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="subjectField" promptText="Enter meeting subject" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Participant Count:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="participantCountField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-            <Label text="Table Number:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="tableNumberField" promptText="Enter table number" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Image Path:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <TextField fx:id="imagePathField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+    
+                <columnConstraints>
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+            </GridPane>
 
-            <Label text="Participant Count:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <TextField fx:id="participantCountField" promptText="Enter number of participants" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-
-            <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <TextField fx:id="imagePathField" editable="false" HBox.hgrow="ALWAYS"/>
-                <Button text="Browse" onAction="#browseImage"/>
-            </HBox>
-        </GridPane>
+            <!-- Label for displaying validation errors -->
+            <Label fx:id="errorLabel" style="-fx-text-fill: red;" wrapText="true" />
+        </VBox>
     </content>
 
     <buttonTypes>
-        <ButtonType text="Cancel" buttonData="CANCEL_CLOSE"/>
-        <ButtonType text="Create" buttonData="OK_DONE"/>
+        <ButtonType buttonData="CANCEL_CLOSE" text="Cancel" />
+        <ButtonType buttonData="APPLY" text="Create" />
     </buttonTypes>
 </DialogPane>

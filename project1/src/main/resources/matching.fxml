@@ -21,7 +21,7 @@
         <TextField fx:id="assessors" layoutX="14.0" layoutY="300.0" promptText="Assessors" editable="false" />
         <MenuButton fx:id="AssessortButton" layoutX="187.0" layoutY="300.0" mnemonicParsing="false" text="Add Assessors" />
 
-        <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true" />
+        <TextField fx:id="imagePathField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <Button layoutX="14.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleImageUpload" text="Upload Image" />
 
         <HBox layoutX="14.0" layoutY="540.0" spacing="10.0">

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #2a2a2a, #1e1e1e);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DetailsProduit">
+
+    <!-- Top Navigation Bar -->
+    <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="900.0" style="-fx-background-color: #000000; -fx-padding: 0 30 0 30;">
+        <children>
+            <ImageView fx:id="logoImageView" fitHeight="67.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                </image>
+            </ImageView>
+            <Pane HBox.hgrow="ALWAYS" />
+
+            <Button onAction="#navigateToAccueil" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Accueil" />
+            <Button onAction="#navigateToRencontres" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Rencontres" />
+            <Button onAction="#navigateToEvenements" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Événements" />
+            <Button onAction="#navigateToForum" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Forum" />
+            <Button onAction="#navigateToBoutique" style="-fx-background-color: #c49b63; -fx-text-fill: #000000; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 20;" text="Boutique" />
+            <Button onAction="#navigateToConnexion" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Connexion" />
+        </children>
+    </HBox>
+
+    <!-- Main Content -->
+    <VBox layoutY="70.0" prefHeight="530.0" prefWidth="900.0" style="-fx-background-color: transparent; -fx-padding: 20;">
+
+        <!-- Titre Section -->
+        <Label style="-fx-text-fill: #c49b63; -fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 0 0 20 0;" text="Détails du Produit" />
+
+        <!-- Formulaire -->
+        <GridPane hgap="20" vgap="15" style="-fx-padding: 0 20;">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="150" halignment="RIGHT" />
+                <ColumnConstraints prefWidth="300" />
+                <ColumnConstraints prefWidth="150" halignment="RIGHT" />
+                <ColumnConstraints prefWidth="300" />
+            </columnConstraints>
+
+            <!-- Ligne 1: Nom -->
+            <Label text="Nom du produit:" style="-fx-text-fill: #c49b63;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="productNameField" style="-fx-background-color: #282828; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-border-color: #c49b63; -fx-border-width: 0 0 1 0;" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+
+            <!-- Ligne 2: Prix -->
+            <Label text="Prix (TND):" style="-fx-text-fill: #c49b63;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <TextField fx:id="productPriceField" style="-fx-background-color: #282828; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-border-color: #c49b63; -fx-border-width: 0 0 1 0;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <!-- Ligne 3: Description -->
+            <Label text="Description:" style="-fx-text-fill: #c49b63;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <TextArea fx:id="productDescriptionField" style="-fx-control-inner-background: #282828; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 5;" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2" prefHeight="100" />
+
+            <!-- Ligne 5: Images -->
+            <Label text="Images:" style="-fx-text-fill: #c49b63;" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+
+            <!-- Conteneur des images -->
+            <HBox spacing="20" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Image principale" style="-fx-text-fill: #aaaaaa;" />
+                    <ImageView fx:id="productImageView" fitHeight="120" fitWidth="120" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 0, 1);" />
+                </VBox>
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Image 2" style="-fx-text-fill: #aaaaaa;" />
+                    <ImageView fx:id="productImage2View" fitHeight="120" fitWidth="120" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 0, 1);" />
+                </VBox>
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Image 3" style="-fx-text-fill: #aaaaaa;" />
+                    <ImageView fx:id="productImage3View" fitHeight="120" fitWidth="120" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 0, 1);" />
+                </VBox>
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Image 4" style="-fx-text-fill: #aaaaaa;" />
+                    <ImageView fx:id="productImage4View" fitHeight="120" fitWidth="120" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 0, 1);" />
+                </VBox>
+            </HBox>
+        </GridPane>
+    </VBox>
+</AnchorPane>

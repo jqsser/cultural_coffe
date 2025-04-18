@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.ModifierCommande"
+            style="-fx-background-color: #282828; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5;"
+            prefWidth="400"
+            prefHeight="400">
+
+    <!-- Titre -->
+    <Label text="MODIFIER LA COMMANDE"
+           style="-fx-text-fill: #c49b63; -fx-font-size: 20px; -fx-font-weight: bold;"
+           layoutX="20" layoutY="20">
+        <font>
+            <Font name="Segoe UI Light" size="20.0" />
+        </font>
+        <effect>
+            <DropShadow color="#c49b63" radius="0" spread="0.1" />
+        </effect>
+    </Label>
+
+    <Line startX="20" endX="380" startY="50" endY="50" stroke="#c49b63" strokeWidth="1" />
+
+    <!-- Contenu -->
+    <VBox layoutX="20" layoutY="60" spacing="15" prefWidth="360">
+        <!-- Contrôle de quantité -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Quantité:" style="-fx-text-fill: #e0e0e0;"/>
+            <Button text="-"
+                    onAction="#decrementQuantity"
+                    style="-fx-background-color: transparent; -fx-text-fill: #c49b63; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-min-width: 30;"/>
+
+            <TextField fx:id="quantityField"
+                       style="-fx-background-color: #383838; -fx-text-fill: white; -fx-border-color: #c49b63; -fx-max-width: 50;"
+                       onKeyReleased="#calculateTotal"/>
+
+            <Button text="+"
+                    onAction="#incrementQuantity"
+                    style="-fx-background-color: transparent; -fx-text-fill: #c49b63; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-min-width: 30;"/>
+        </HBox>
+
+        <!-- Message de validation -->
+        <VBox fx:id="validationContainer"
+              visible="false"
+              style="-fx-padding: 0 0 0 60;">
+            <Label fx:id="validationMessage"
+                   text=""
+                   style="-fx-text-fill: #ff4444; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- Informations de prix -->
+        <HBox spacing="10">
+            <Label text="Prix unitaire:" style="-fx-text-fill: #e0e0e0;"/>
+            <Label fx:id="unitPriceLabel"
+                   text="0 TND"
+                   style="-fx-text-fill: #c49b63;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Prix total:" style="-fx-text-fill: #e0e0e0;"/>
+            <Label fx:id="totalPriceLabel"
+                   text="0 TND"
+                   style="-fx-text-fill: #c49b63; -fx-font-weight: bold;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Boutons -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" layoutX="20" layoutY="320">
+        <Button text="ANNULER"
+                onAction="#closePopup"
+                style="-fx-background-color: transparent; -fx-text-fill: #c49b63; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 5 20;"/>
+
+        <Button text="ENREGISTRER"
+                onAction="#updateCommande"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 5 20;">
+            <effect>
+                <DropShadow color="#00000080" radius="3" />
+            </effect>
+        </Button>
+    </HBox>
+</AnchorPane>

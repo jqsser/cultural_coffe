@@ -8,7 +8,7 @@ Ce projet propose une plateforme digitale pour connecter les gens et renforcer l
 
 **DEVCulture**
 # Créer le fichier README.md
-echo # Cultural Coffee
+ Cultural Coffee
 
 ## Description
 
@@ -16,7 +16,7 @@ Ce projet propose une plateforme digitale pour connecter les gens et renforcer l
 
 ## Réalisée par
 
-**DEVCulture** > README.md
+**DEVCulture** 
 
 # Ajouter, valider et pousser le fichier vers la branche 'matching'
 git add README.md

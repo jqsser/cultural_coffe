@@ -19,6 +19,12 @@ Ce projet propose une plateforme digitale pour connecter les gens et renforcer l
 **DEVCulture** 
 
 # Ajouter, valider et pousser le fichier vers la branche 'matching'
+```
 git add README.md
+```
+```
 git commit -m "Add README.md with project description"
+```
+```
 git push origin matching
+```

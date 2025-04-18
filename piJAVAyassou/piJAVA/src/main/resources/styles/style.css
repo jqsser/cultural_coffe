@@ -1,0 +1,10 @@
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.nav-btn:hover {
+    -fx-background-color: #ff6600;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+
+<?import java.lang.String?>
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #2a2a2a, #1e1e1e);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ModifierProduit">
+    <children>
+        <!-- Top Navigation Bar -->
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="900.0" style="-fx-background-color: #000000; -fx-padding: 0 30 0 30;">
+            <children>
+                <ImageView fx:id="logoImageView" fitHeight="67.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                    </image>
+                </ImageView>
+                <Pane HBox.hgrow="ALWAYS" />
+
+                <Button onAction="#navigateToAccueil" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Accueil" />
+                <Button onAction="#navigateToRencontres" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Rencontres" />
+                <Button onAction="#navigateToEvenements" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Événements" />
+                <Button onAction="#navigateToForum" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Forum" />
+                <Button onAction="#navigateToBoutique" style="-fx-background-color: #c49b63; -fx-text-fill: #000000; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 20;" text="Boutique" />
+                <Button onAction="#navigateToConnexion" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Connexion" />
+            </children>
+        </HBox>
+
+        <!-- Main Content -->
+        <VBox layoutY="70.0" prefHeight="530.0" prefWidth="900.0" style="-fx-background-color: transparent; -fx-padding: 20;">
+            <children>
+                <!-- Elegant Title Section -->
+                <VBox alignment="CENTER" spacing="5" style="-fx-padding: 0 0 20 0;">
+                    <Label style="-fx-text-fill: #c49b63; -fx-font-size: 28px; -fx-font-weight: bold;" text="MODIFIER LE PRODUIT">
+                        <font>
+                            <Font name="Segoe UI Light" size="28.0" />
+                        </font>
+                        <effect>
+                            <DropShadow color="#c49b63" radius="0" spread="0.2" />
+                        </effect>
+                    </Label>
+                    <Pane prefHeight="2.0" prefWidth="300.0" style="-fx-background-color: #c49b63;" />
+                </VBox>
+
+                <!-- Form Section -->
+                <VBox spacing="20" style="-fx-background-color: #282828; -fx-padding: 30; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5;">
+                    <!-- First Row -->
+                    <HBox spacing="30" alignment="CENTER_LEFT">
+                        <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                            <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="NOM DU PRODUIT" />
+                            <TextField fx:id="nomTF" promptText="Modifier le nom" style="-fx-background-color: #383838; -fx-text-fill: white; -fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 3;" />
+                            <Label fx:id="nomError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 3 0 0 5;" />
+                        </VBox>
+
+                        <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                            <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="PRIX (DT)" />
+                            <TextField fx:id="prixTF" promptText="Modifier le prix" style="-fx-background-color: #383838; -fx-text-fill: white; -fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 3;" />
+                            <Label fx:id="prixError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 3 0 0 5;" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Second Row -->
+                    <HBox spacing="30" alignment="CENTER_LEFT">
+                        <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                            <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="DESCRIPTION" />
+                            <TextField fx:id="descriptionTF" promptText="Modifier la description" style="-fx-background-color: #383838; -fx-text-fill: white; -fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 3;" />
+                            <Label fx:id="descriptionError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 3 0 0 5;" />
+                        </VBox>
+
+                        <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                            <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="STOCK DISPONIBLE" />
+                            <TextField fx:id="stockTF" promptText="Modifier le stock" style="-fx-background-color: #383838; -fx-text-fill: white; -fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 3;" />
+                            <Label fx:id="stockError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 3 0 0 5;" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Third Row -->
+                    <HBox spacing="30" alignment="CENTER_LEFT">
+                        <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                            <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="CATÉGORIE" />
+                            <ComboBox fx:id="typeTF" style="-fx-background-color: #383838; -fx-text-fill: white; -fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 3;">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Artistique" />
+                                        <String fx:value="Artisanat" />
+                                        <String fx:value="Livre" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                            <Label fx:id="typeError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 3 0 0 5;" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Images Section -->
+                    <VBox spacing="15" style="-fx-padding: 10 0 0 0;">
+                        <Label style="-fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-font-weight: bold;" text="IMAGES DU PRODUIT" />
+                        <Label fx:id="imageError" style="-fx-text-fill: #ff4444; -fx-font-size: 11px; -fx-padding: 0 0 0 5;" />
+
+                        <HBox spacing="25" alignment="CENTER">
+                            <VBox spacing="8" alignment="CENTER">
+                                <ImageView fx:id="img1TF" fitHeight="120.0" fitWidth="120.0" preserveRatio="true" style="-fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 3;">
+                                    <effect>
+                                        <InnerShadow color="#00000080" radius="5" />
+                                    </effect>
+                                </ImageView>
+                                <Button mnemonicParsing="false" onAction="#selectimg1" style="-fx-background-color: #c49b63; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 5 15; -fx-background-radius: 20;" text="Changer Image 1" />
+                            </VBox>
+
+                            <VBox spacing="8" alignment="CENTER">
+                                <ImageView fx:id="img2TF" fitHeight="120.0" fitWidth="120.0" preserveRatio="true" style="-fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 3;">
+                                    <effect>
+                                        <InnerShadow color="#00000080" radius="5" />
+                                    </effect>
+                                </ImageView>
+                                <Button mnemonicParsing="false" onAction="#selectimg2" style="-fx-background-color: #c49b63; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 5 15; -fx-background-radius: 20;" text="Changer Image 2" />
+                            </VBox>
+
+                            <VBox spacing="8" alignment="CENTER">
+                                <ImageView fx:id="img3TF" fitHeight="120.0" fitWidth="120.0" preserveRatio="true" style="-fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 3;">
+                                    <effect>
+                                        <InnerShadow color="#00000080" radius="5" />
+                                    </effect>
+                                </ImageView>
+                                <Button mnemonicParsing="false" onAction="#selectimg3" style="-fx-background-color: #c49b63; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 5 15; -fx-background-radius: 20;" text="Changer Image 3" />
+                            </VBox>
+
+                            <VBox spacing="8" alignment="CENTER">
+                                <ImageView fx:id="img4TF" fitHeight="120.0" fitWidth="120.0" preserveRatio="true" style="-fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 3;">
+                                    <effect>
+                                        <InnerShadow color="#00000080" radius="5" />
+                                    </effect>
+                                </ImageView>
+                                <Button mnemonicParsing="false" onAction="#selectimg4" style="-fx-background-color: #c49b63; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 5 15; -fx-background-radius: 20;" text="Changer Image 4" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Submit Button -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <Button mnemonicParsing="false" style="-fx-background-color: #383838; -fx-text-fill: #c49b63; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 25; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-border-radius: 25;" text="ANNULER">
+                            <effect>
+                                <DropShadow color="#00000080" radius="5" />
+                            </effect>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#modifierProduit" style="-fx-background-color: #c49b63; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 12 40; -fx-background-radius: 25; -fx-font-size: 16px;" text="MODIFIER LE PRODUIT">
+                            <effect>
+                                <DropShadow color="#00000080" radius="5" />
+                            </effect>
+                        </Button>
+                    </HBox>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

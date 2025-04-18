@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.SupprimerCommande"
+            style="-fx-background-color: #282828; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5;"
+            prefWidth="400"
+            prefHeight="250">
+
+    <!-- Titre -->
+    <Label text="SUPPRIMER LA COMMANDE"
+           style="-fx-text-fill: #c49b63; -fx-font-size: 20px; -fx-font-weight: bold;"
+           layoutX="20" layoutY="20">
+        <font>
+            <Font name="Segoe UI Light" size="20.0" />
+        </font>
+        <effect>
+            <DropShadow color="#c49b63" radius="0" spread="0.1" />
+        </effect>
+    </Label>
+
+    <Line startX="20" endX="380" startY="50" endY="50" stroke="#c49b63" strokeWidth="1" />
+
+    <!-- Message de confirmation -->
+    <VBox layoutX="20" layoutY="60" spacing="15" prefWidth="360">
+        <Text fx:id="messageText"
+              style="-fx-fill: #e0e0e0; -fx-font-size: 14px; -fx-wrapping-width: 360;"
+              text="Êtes-vous sûr de vouloir supprimer cette commande ?"/>
+
+        <Text fx:id="commandeDetails"
+              style="-fx-fill: #ff6600; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+        <Text style="-fx-fill: #ff4444; -fx-font-size: 14px; -fx-font-weight: bold;"
+              text="Cette action est irréversible !"/>
+    </VBox>
+
+    <!-- Boutons -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" layoutX="20" layoutY="170">
+        <Button fx:id="cancelBtn"
+                text="ANNULER"
+                style="-fx-background-color: transparent; -fx-text-fill: #c49b63; -fx-border-color: #c49b63; -fx-border-width: 1; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 5 20;"/>
+
+        <Button fx:id="confirmBtn"
+                text="CONFIRMER"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 5 20;">
+            <effect>
+                <DropShadow color="#00000080" radius="3" />
+            </effect>
+        </Button>
+    </HBox>
+</AnchorPane>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #2a2a2a, #1e1e1e);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ChatController">
+    <children>
+        <!-- Top Navigation Bar -->
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="900.0" style="-fx-background-color: #000000; -fx-padding: 0 30 0 30;">
+            <children>
+                <ImageView fx:id="logoImageView" fitHeight="67.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@logofront.png" />
+                    </image>
+                </ImageView>
+                <Pane HBox.hgrow="ALWAYS" />
+
+                <Button onAction="#navigateToAccueil" style="-fx-background-color: transparent; -fx-text-fill: #c49b63; -fx-font-size: 14px; -fx-cursor: hand; -fx-font-weight: bold;" text="Accueil">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Button>
+                <Button onAction="#navigateToRencontres" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Rencontres">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Button>
+                <Button onAction="#navigateToEvenements" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Événements">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Button>
+                <Button onAction="#navigateToForum" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Forum">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Button>
+                <Button onAction="#navigateToBoutique" style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-cursor: hand;" text="Boutique">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="connexionButton" onAction="#navigateToConnexion" style="-fx-background-color: #c49b63; -fx-text-fill: #000000; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 20;" text="Connexion">
+                    <font>
+                        <Font name="Segoe UI Bold" size="14.0" />
+                    </font>
+                </Button>
+            </children>
+        </HBox>
+
+        <!-- Main Content -->
+        <VBox layoutY="70.0" prefHeight="530.0" prefWidth="900.0" style="-fx-background-color: transparent;">
+            <children>
+                <!-- Features Section - Matching and Chat -->
+                <HBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
+                    <!-- Matching List -->
+                    <VBox focusTraversable="true" prefHeight="441.0" prefWidth="222.0" spacing="10" style="-fx-background-color: rgba(0, 0, 0, 0.5);" HBox.hgrow="ALWAYS">
+                        <Label contentDisplay="CENTER" style="-fx-font-size: 18; -fx-font-weight: bold;" text="Matchings">
+                     <cursor>
+                        <Cursor fx:constant="E_RESIZE" />
+                     </cursor></Label>
+                        <Button onAction="#handle3DCoffee" styleClass="secondary-button" text="3D Coffee" />
+                        <TextField fx:id="searchField" promptText="Search matchings..." styleClass="search-field" />
+                        <Button onAction="#searchMatchings" styleClass="primary-button" text="Search" />
+                  <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                         <Button alignment="CENTER" onAction="#showCreateMatchingDialog" styleClass="primary-button" text="Add New Matching" />
+                        <Button alignment="CENTER_RIGHT" onAction="#botAI" styleClass="primary-button" text="Add IA" />
+                     </children>
+                  </HBox>
+                        <ListView fx:id="matchingListView" prefHeight="369.0" prefWidth="229.0" styleClass="matching-list" VBox.vgrow="ALWAYS" />
+                    </VBox>
+
+                    <!-- Chat Section -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="657.0" spacing="10.0" styleClass="chat-header">
+                            <ImageView fx:id="matchingImageView" fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <image>
+                                    <Image url="@/images/avatar.png" />
+                                </image>
+                            </ImageView>
+                            <VBox prefHeight="50.0" prefWidth="149.0" style="-fx-padding: 0 0 0 10;">
+                                <Label fx:id="matchingIdLabel" style="-fx-text-fill: #6c757d; -fx-font-size: 12;" />
+                                <Label fx:id="matchingNameLabel" style="-fx-font-weight: bold;" />
+                                <Label fx:id="matchingSubjectLabel" style="-fx-text-fill: #6c757d; -fx-font-size: 12;" />
+                            </VBox>
+                            <Button fx:id="editMatchingButton" onAction="#showEditMatchingDialog" prefHeight="25.0" prefWidth="29.0" styleClass="icon-button">
+                                <graphic>
+                                    <ImageView fitHeight="19.0" fitWidth="23.0">
+                                        <image>
+                                            <Image url="@/images/cog.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                            <Button fx:id="deleteMatchingButton" alignment="CENTER" onAction="#deleteCurrentMatching" styleClass="icon-button" text="Delete" textOverrun="CLIP">
+                                <graphic>
+                                    <ImageView fitHeight="16" fitWidth="16">
+                                        <image>
+                                            <Image url="@/images/trash.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+
+                            <ComboBox fx:id="unaccessibleMatchingsComboBox" onAction="#handleAddMatching" prefHeight="25.0" prefWidth="130.0" promptText="Add Matching">
+                                <!-- Items will be populated dynamically -->
+                            </ComboBox>
+                        </HBox>
+                        <ListView fx:id="messageListView" styleClass="message-list" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+                            <TextArea fx:id="messageTextArea" prefHeight="38.0" prefWidth="430.0" promptText="Type your message..." styleClass="message-input" />
+                            <Button cache="true" contentDisplay="CENTER" onAction="#correctMessage" prefHeight="27.0" prefWidth="97.0" styleClass="secondary-button" text="Correct">
+                        <opaqueInsets>
+                           <Insets />
+                        </opaqueInsets></Button>
+                            <Button onAction="#sendMessage" prefHeight="29.0" prefWidth="99.0" styleClass="primary-button" text="Send" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+            <HBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
